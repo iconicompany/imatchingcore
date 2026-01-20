@@ -12,7 +12,7 @@ export class SpecializationsMatchingFactory {
             .filter(line => line && line !== '"Название"')
             .map(line => line.replace(/^"(.*)"$/, '$1'));
 
-        // Filtered and refined synonyms (removed hyper-generalizing ones like frontend->разработчик)
+        // Filtered and refined synonyms
         const synonymsData: WordSynonym[] = [
             { src: 'dev', dst: 'разработчик' },
             { src: 'manual', dst: 'ручной' },
@@ -168,9 +168,43 @@ export class SpecializationsMatchingFactory {
             { src: 'технологий', dst: null },
             { src: 'it', dst: null },
             { src: 'ит', dst: null },
+
+            // Local synonyms merged
+            { src: 'uxui', dst: 'дизайнер' },
+            { src: 'ux', dst: 'дизайнер' },
+            { src: 'ui', dst: 'дизайнер' },
+            { src: 'sa', dst: 'системный аналитик' },
+            { src: 'ba', dst: 'бизнес аналитик' },
+            { src: 'са', dst: 'системный аналитик' },
+            { src: 'ба', dst: 'бизнес аналитик' },
+            { src: 'be', dst: 'backend' },
+            { src: 'fe', dst: 'frontend' },
+            { src: 'do', dst: 'devops' },
+            { src: 'qa', dst: 'тестировщик' },
+            { src: 'developer', dst: 'разработчик' },
+            { src: 'engineer', dst: 'инженер' },
+            { src: 'analyst', dst: 'аналитик' },
+            { src: 'scrum', dst: 'скрам' },
+            { src: 'master', dst: 'мастер' },
+            { src: 'backend', dst: 'бэкенд' },
+            { src: 'frontend', dst: 'фронтенд' },
+            { src: 'fullstack', dst: 'фуллстек' },
+            { src: 'mobile', dst: 'мобильный' },
+            { src: 'ios', dst: 'иос' },
+            { src: 'android', dst: 'андроид' },
+            { src: 'scientist', dst: 'сайентист' },
+            { src: 'data', dst: 'дата' },
+            { src: 'architect', dst: 'архитектор' },
+            { src: 'lead', dst: 'лид' },
+            { src: 'manager', dst: 'менеджер' },
+            { src: 'owner', dst: 'овнер' },
+            { src: 'тестирование', dst: 'тестировщик' },
+            { src: 'нагрузочное', dst: 'нагрузочный' },
+            { src: 'функциональное', dst: 'ручной' },
+            { src: 'разработки', dst: 'разработчик' },
+            { src: 'программист', dst: 'разработчик' },
         ];
 
-        // Combine base weights with specialized ones
         const weightsData: WordWeight[] = [
             { word: 'frontend', weight: 0.5 },
             { word: 'backend', weight: 0.5 },
@@ -215,42 +249,6 @@ export class SpecializationsMatchingFactory {
             { word: 'etl', weight: 1.5 },
         ];
 
-        const localSynonyms: Record<string, string> = {
-            'uxui': 'дизайнер',
-            'ux': 'дизайнер',
-            'ui': 'дизайнер',
-            'sa': 'системный аналитик',
-            'ba': 'бизнес аналитик',
-            'са': 'системный аналитик',
-            'ба': 'бизнес аналитик',
-            'be': 'backend',
-            'fe': 'frontend',
-            'do': 'devops',
-            'qa': 'тестировщик',
-            'developer': 'разработчик',
-            'engineer': 'инженер',
-            'analyst': 'аналитик',
-            'scrum': 'скрам',
-            'master': 'мастер',
-            'backend': 'бэкенд',
-            'frontend': 'фронтенд',
-            'fullstack': 'фуллстек',
-            'mobile': 'мобильный',
-            'ios': 'иос',
-            'android': 'андроид',
-            'scientist': 'сайентист',
-            'data': 'дата',
-            'architect': 'архитектор',
-            'lead': 'лид',
-            'manager': 'менеджер',
-            'owner': 'овнер',
-            'тестирование': 'тестировщик',
-            'нагрузочное': 'нагрузочный',
-            'функциональное': 'ручной',
-            'разработки': 'разработчик',
-            'программист': 'разработчик',
-        };
-
         const stopWords = [
             'в', 'на', 'с', 'к', 'по', 'из', 'от', 'до', 'у', 'о', 'об', 'за', 'над', 'под', 'при', 'для',
             'и', 'а', 'но', 'да', 'или', 'как', 'так', 'что', 'чтобы', 'если', 'хотя', 'не', 'ни', 'же', 'ли',
@@ -264,7 +262,6 @@ export class SpecializationsMatchingFactory {
             specNames,
             synonymsData,
             weightsData,
-            localSynonyms,
             stopWords
         );
     }

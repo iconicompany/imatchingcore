@@ -12,14 +12,12 @@ export class SpecializationsMatchingEngine {
     private synonyms: Map<string, string | null>;
     private weights: Map<string, number>;
     private normalizedSpecs: { original: string; words: string[] }[];
-    private localSynonyms: Map<string, string>;
     private stopWords: Set<string>;
 
     constructor(
         specializationNames: string[],
         synonyms: WordSynonym[],
         weights: WordWeight[],
-        localSynonyms: Record<string, string>,
         stopWords: string[]
     ) {
         this.synonyms = new Map();
@@ -27,13 +25,7 @@ export class SpecializationsMatchingEngine {
             this.synonyms.set(this.replaceHomoglyphs(s.src.toLowerCase()), s.dst ? s.dst.toLowerCase() : null);
         }
 
-        // 1. Initialize local synonyms
-        this.localSynonyms = new Map();
-        for (const [k, v] of Object.entries(localSynonyms)) {
-            this.localSynonyms.set(this.replaceHomoglyphs(k.toLowerCase()), v);
-        }
-
-        // 2. Initialize weights
+        // 1. Initialize weights
         this.weights = new Map();
         for (const w of weights) {
             const words = this.normalize(w.word).split(/\s+/).filter(tk => tk.length > 0);
@@ -42,10 +34,10 @@ export class SpecializationsMatchingEngine {
             }
         }
 
-        // 3. Initialize stopwords
+        // 2. Initialize stopwords
         this.stopWords = new Set(stopWords.map(w => this.replaceHomoglyphs(w.toLowerCase())));
 
-        // 4. Pre-normalize specializations
+        // 3. Pre-normalize specializations
         this.normalizedSpecs = specializationNames.map(name => {
             const normalized = this.normalize(name);
             return {
@@ -78,11 +70,6 @@ export class SpecializationsMatchingEngine {
             // Global synonym
             if (this.synonyms && this.synonyms.has(current)) {
                 current = this.synonyms.get(current) || '';
-            }
-
-            // Local common IT synonym
-            if (this.localSynonyms.has(current)) {
-                current = this.localSynonyms.get(current)!;
             }
 
             return current;
