@@ -18,51 +18,18 @@ export class SpecializationsMatchingEngine {
     constructor(
         specializationNames: string[],
         synonyms: WordSynonym[],
-        weights: WordWeight[]
+        weights: WordWeight[],
+        localSynonyms: Record<string, string>,
+        stopWords: string[]
     ) {
         this.synonyms = new Map();
         for (const s of synonyms) {
             this.synonyms.set(this.replaceHomoglyphs(s.src.toLowerCase()), s.dst ? s.dst.toLowerCase() : null);
         }
 
-        // 1. Initialize local synonyms with homoglyphs replaced in keys
+        // 1. Initialize local synonyms
         this.localSynonyms = new Map();
-        const rawLocal: Record<string, string> = {
-            'uxui': 'дизайнер',
-            'ux': 'дизайнер',
-            'ui': 'дизайнер',
-            'sa': 'системный аналитик',
-            'ba': 'бизнес аналитик',
-            'са': 'системный аналитик',
-            'ба': 'бизнес аналитик',
-            'be': 'backend',
-            'fe': 'frontend',
-            'do': 'devops',
-            'qa': 'тестировщик',
-            'developer': 'разработчик',
-            'engineer': 'инженер',
-            'analyst': 'аналитик',
-            'scrum': 'скрам',
-            'master': 'мастер',
-            'backend': 'бэкенд',
-            'frontend': 'фронтенд',
-            'fullstack': 'фуллстек',
-            'mobile': 'мобильный',
-            'ios': 'иос',
-            'android': 'андроид',
-            'scientist': 'сайентист',
-            'data': 'дата',
-            'architect': 'архитектор',
-            'lead': 'лид',
-            'manager': 'менеджер',
-            'owner': 'овнер',
-            'тестирование': 'тестировщик',
-            'нагрузочное': 'нагрузочный',
-            'функциональное': 'ручной',
-            'разработки': 'разработчик',
-            'программист': 'разработчик',
-        };
-        for (const [k, v] of Object.entries(rawLocal)) {
+        for (const [k, v] of Object.entries(localSynonyms)) {
             this.localSynonyms.set(this.replaceHomoglyphs(k.toLowerCase()), v);
         }
 
@@ -76,15 +43,7 @@ export class SpecializationsMatchingEngine {
         }
 
         // 3. Initialize stopwords
-        const rawStop = [
-            'в', 'на', 'с', 'к', 'по', 'из', 'от', 'до', 'у', 'о', 'об', 'за', 'над', 'под', 'при', 'для',
-            'и', 'а', 'но', 'да', 'или', 'как', 'так', 'что', 'чтобы', 'если', 'хотя', 'не', 'ни', 'же', 'ли',
-            'senior', 'middle', 'junior', 'lead', 'tech', 'team', 'lead', 'senior+', 'middle+', 'junior+',
-            '🆔', 'redlab', 'mts', 'digital', 'мтс', 'диджитал', 'леманапро', 'x5', 'вк', 'vk', 'крок', 'itfb',
-            'the', 'a', 'an', 'of', 'for', 'to', 'in', 'on', 'at', 'by', 'with', 'проект', 'проекта', 'проекте',
-            'номер', 'потребности', 'id', 'п2026', '🆔', 'коллеги', 'всем', 'привет', 'актуальные', 'потребности',
-        ];
-        this.stopWords = new Set(rawStop.map(w => this.replaceHomoglyphs(w.toLowerCase())));
+        this.stopWords = new Set(stopWords.map(w => this.replaceHomoglyphs(w.toLowerCase())));
 
         // 4. Pre-normalize specializations
         this.normalizedSpecs = specializationNames.map(name => {
