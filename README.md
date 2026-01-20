@@ -6,10 +6,9 @@ To install dependencies:
 bun install
 ```
 
-To run:
+To run test:
 
 ```bash
-bun run index.ts
+bun test specializations-matching-engine.test.ts
 ```
 
-This project was created using `bun init` in bun v1.3.5. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
