@@ -1,0 +1,51 @@
+name: Publish Release to NPM
+
+on: 
+  release:
+    types: [created]
+
+permissions:
+  contents: write      # нужно для пуша
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Checkout the branch where the release was created, not the tag
+          ref: ${{ github.event.release.target_commitish }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Bump version to release tag
+        id: bump_version
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          # GITHUB_REF is in format refs/tags/<tag_name>, we want the tag name
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          # Use npm version to update package.json and package-lock.json
+          # --no-git-tag-version prevents it from creating a commit or tag
+          npm version $VERSION --no-git-tag-version --allow-same-version
+      - name: Publish to NPM
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - name: Commit and push version bump
+        run: |
+          # Commit the changes made by npm version
+          git add package.json package-lock.json
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "Version already up to date."
+          else
+            git commit -m "chore(release): bump version to ${{ steps.bump_version.outputs.version }}"
+            git push
+          fi

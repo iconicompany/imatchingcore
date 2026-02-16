@@ -1,8 +1,15 @@
 {
-  "name": "imatchingcore",
-  "module": "index.ts",
+  "name": "@iconicompany/imatchingcore",
+  "version": "1.0.0",
+  "description": "Matching engine core library",
+  "main": "src/specializations/specializations-matching-engine.ts",
+  "module": "src/specializations/specializations-matching-engine.ts",
+  "types": "src/specializations/specializations-matching-engine.ts",
   "type": "module",
-  "private": true,
+  "scripts": {
+    "test": "bun test specializations-matching-engine.test.ts",
+    "build": "echo 'No build step required - TypeScript source is published'"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
