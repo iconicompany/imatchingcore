@@ -28,9 +28,9 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          npm version patch --force
+          npm version patch
       - name: Publish to NPM
         run: npm publish --access public
       - name: Commit and push
         run: |
-          git push
+          git push --follow-tags
