@@ -1,10 +1,11 @@
 import path from 'path';
+import fs from 'fs/promises';
 import { SpecializationsMatchingEngine, type WordSynonym, type WordWeight } from './specializations-matching-engine';
 
 export class SpecializationsMatchingFactory {
     public static async create(): Promise<SpecializationsMatchingEngine> {
         const csvPath = path.resolve(process.cwd(), 'data/specializations/specializations.csv');
-        const fileContent = await Bun.file(csvPath).text();
+        const fileContent = await fs.readFile(csvPath, 'utf-8');
 
         const specNames = fileContent
             .split('\n')
