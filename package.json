@@ -1,7 +1,13 @@
 {
   "name": "@iconicompany/imatchingcore",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Matching engine core library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iconicompany/imatchingcore.git"
+  },
+  "author": "iconicompany",
+  "license": "UNLICENSED",
   "main": "src/specializations/specializations-matching-engine.ts",
   "module": "src/specializations/specializations-matching-engine.ts",
   "types": "src/specializations/specializations-matching-engine.ts",
