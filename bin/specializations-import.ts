@@ -28,7 +28,7 @@ async function main() {
     await sql`
       INSERT INTO specializations (name, level)
       VALUES (${specName}, 1)
-      ON CONFLICT (lower(name)) DO UPDATE SET level = EXCLUDED.level
+      ON CONFLICT (lower(name)) DO UPDATE SET level = 1 WHERE specializations.level != 0
     `;
   }
   console.log(`Processed ${specs.length} specializations.`);

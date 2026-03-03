@@ -102,7 +102,7 @@ function getCategory(specName: string): string {
     if (nameLower.includes("технический писатель") || nameLower === "писатель") return "Сопровождение";
 
     // Promotion
-    if (nameLower.includes("seo") || nameLower.includes("контент-менеджер")) return "Продвижение";
+    if (nameLower.includes("seo") || nameLower.includes("контент-менеджер")) return "SEO и трафик";
     if (nameLower.includes("email-маркетолог") || nameLower.includes("контент-мейкер")) return "Контент-маркетинг";
     if (nameLower.includes("event-менеджер") || nameLower.includes("pr-менеджер") || nameLower.includes("gr-менеджер")) return "PR";
     if (nameLower.includes("smm")) return "SMM";
