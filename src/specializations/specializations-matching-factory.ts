@@ -6,7 +6,7 @@ import { SpecializationsMatchingEngine, type WordSynonym, type WordWeight } from
 export class SpecializationsMatchingFactory {
     public static async create(): Promise<SpecializationsMatchingEngine> {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        const csvPath = path.resolve(__dirname, '../../data/specializations/specializations.csv');
+        const csvPath = path.resolve(__dirname, '../../data/specializations.csv');
         const fileContent = await fs.readFile(csvPath, 'utf-8');
 
         const specNames = fileContent
