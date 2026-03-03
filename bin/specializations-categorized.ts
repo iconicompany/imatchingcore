@@ -171,7 +171,7 @@ function parseSimpleCsv(csv: string) {
 }
 
 function run() {
-    const specCsv = fs.readFileSync('specializations.csv', 'utf-8');
+    const specCsv = fs.readFileSync('data/specializations.csv', 'utf-8');
     const specs = parseSimpleCsv(specCsv);
 
     // Skip the first row "Название"
@@ -185,8 +185,8 @@ function run() {
     }
 
     const outputCsv = results.join('\n') + '\n';
-    fs.writeFileSync('specializations_categorized.csv', outputCsv);
-    console.log("Done. Saved to specializations_categorized.csv");
+    fs.writeFileSync('data/specializations-categorized.csv', outputCsv);
+    console.log("Done. Saved to data/specializations-categorized.csv");
 }
 
 run();
