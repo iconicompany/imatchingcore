@@ -185,7 +185,7 @@ function run() {
     }
 
     const outputCsv = results.join('\n') + '\n';
-    fs.writeFileSync('specializations_categorized_ts.csv', outputCsv);
+    fs.writeFileSync('specializations_categorized.csv', outputCsv);
     console.log("Done. Saved to specializations_categorized.csv");
 }
 
