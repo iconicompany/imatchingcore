@@ -22,7 +22,10 @@ async function main() {
 
   // 2. Process specializations.csv (level = 1)
   const specsCsv = readFileSync(path.join(__dirname, "../data/specializations.csv"), "utf-8");
-  const specs = specsCsv.split("\n").slice(1).map(line => line.replace(/"/g, '').trim()).filter(Boolean);
+  const specs = specsCsv.split("\n").slice(1).map(line => {
+    const firstPart = line.split(";")[0];
+    return firstPart ? firstPart.replace(/"/g, '').trim() : '';
+  }).filter(Boolean);
 
   for (const specName of specs) {
     await sql`
@@ -33,8 +36,8 @@ async function main() {
   }
   console.log(`Processed ${specs.length} specializations.`);
 
-  // 3. Process specializations-categorized.csv to link via parent_id
-  const mappingsCsv = readFileSync(path.join(__dirname, "../data/specializations-categorized.csv"), "utf-8");
+  // 3. Process specializations.csv to link via parent_id
+  const mappingsCsv = readFileSync(path.join(__dirname, "../data/specializations.csv"), "utf-8");
   const mappings = mappingsCsv.split("\n").slice(1).map(line => line.trim()).filter(Boolean);
 
   let linkedCount = 0;

@@ -166,7 +166,8 @@ function getCategory(specName: string): string {
 
 function parseSimpleCsv(csv: string) {
     return csv.trim().split('\n').map(line => {
-        return line.trim().replace(/^"|"$/g, '');
+        const firstPart = line.split(';')[0];
+        return firstPart ? firstPart.trim().replace(/^"|"$/g, '') : '';
     });
 }
 
@@ -185,8 +186,8 @@ function run() {
     }
 
     const outputCsv = results.join('\n') + '\n';
-    fs.writeFileSync('data/specializations-categorized.csv', outputCsv);
-    console.log("Done. Saved to data/specializations-categorized.csv");
+    fs.writeFileSync('data/specializations.csv', outputCsv);
+    console.log("Done. Saved to data/specializations.csv");
 }
 
 run();
