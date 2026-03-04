@@ -11,8 +11,9 @@ export class SpecializationsMatchingFactory {
 
         const specNames = fileContent
             .split('\n')
-            .map(line => line.trim())
-            .filter(line => line && line !== '"Название"')
+            .slice(1)
+            .map(line => line.split(';')[0]?.trim() || '')
+            .filter(line => line)
             .map(line => line.replace(/^"(.*)"$/, '$1'));
 
         // Filtered and refined synonyms

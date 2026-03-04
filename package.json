@@ -8,9 +8,9 @@
   },
   "author": "iconicompany",
   "license": "UNLICENSED",
-  "main": "src/specializations/specializations-matching-engine.ts",
-  "module": "src/specializations/specializations-matching-engine.ts",
-  "types": "src/specializations/specializations-matching-engine.ts",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "types": "src/index.ts",
   "type": "module",
   "scripts": {
     "test": "bun test specializations-matching-engine.test.ts",
