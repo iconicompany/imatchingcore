@@ -23,16 +23,18 @@ describe("SpecializationTools", () => {
 
     describe("getGroupId", () => {
         test("should return group id for a known specialization", () => {
-            // Back-end разработка belongs to group 2 (Разработка)
-            expect(SpecializationTools.getGroupId("Java разработчик")).toBe(2);
-            // Front-end разработка also belongs to group 2
-            expect(SpecializationTools.getGroupId("React разработчик")).toBe(2);
-            // Devops belongs to group 6
-            expect(SpecializationTools.getGroupId("DevOps")).toBe(6);
-            // QA ручной → Ручное тестирование → group 5
-            expect(SpecializationTools.getGroupId("QA ручной")).toBe(5);
-            // QA авто → Автоматизированное тестирование → group 5
-            expect(SpecializationTools.getGroupId("QA авто")).toBe(5);
+            // Front-end разработка belongs to group 5 (Web + Front-end)
+            expect(SpecializationTools.getGroupId("React разработчик")).toBe(5);
+            // Web-разработка also belongs to group 5
+            expect(SpecializationTools.getGroupId("Web разработчик")).toBe(5);
+            // Back-end разработка belongs to group 7 (separate from frontend)
+            expect(SpecializationTools.getGroupId("Java разработчик")).toBe(7);
+            // Devops belongs to group 15
+            expect(SpecializationTools.getGroupId("DevOps")).toBe(15);
+            // QA ручной → Ручное тестирование → group 13
+            expect(SpecializationTools.getGroupId("QA ручной")).toBe(13);
+            // QA авто → Автоматизированное тестирование → group 13
+            expect(SpecializationTools.getGroupId("QA авто")).toBe(13);
         });
 
         test("should return 0 for unknown specialization", () => {
@@ -62,15 +64,15 @@ describe("SpecializationTools", () => {
         });
 
         test("should return true for adjacent categories when useGroup=true", () => {
-            // Back-end and Front-end are both in group 2 (Разработка)
-            expect(SpecializationTools.isSameCategory("Java разработчик", "React разработчик", true)).toBe(true);
-            // Web разработчик (Web-разработка) and Frontend разработчик (Front-end разработка) — group 2
+            // Web разработчик (Web-разработка, group 5) and Frontend разработчик (Front-end разработка, group 5)
             expect(SpecializationTools.isSameCategory("Web разработчик", "Frontend разработчик", true)).toBe(true);
-            // QA ручной (Ручное тестирование) and QA авто (Автоматизированное тестирование) — group 5
+            // QA ручной (Ручное тестирование) and QA авто (Автоматизированное тестирование) — group 13
             expect(SpecializationTools.isSameCategory("QA ручной", "QA авто", true)).toBe(true);
         });
 
-        test("should still return false for truly different groups even when useGroup=true", () => {
+        test("should return false for different stacks even when useGroup=true", () => {
+            // Back-end (group 7) vs Front-end (group 5) — different groups
+            expect(SpecializationTools.isSameCategory("Java разработчик", "React разработчик", true)).toBe(false);
             // Development vs Testing
             expect(SpecializationTools.isSameCategory("Java разработчик", "QA ручной", true)).toBe(false);
         });
