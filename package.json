@@ -17,7 +17,9 @@
     "build": "echo 'No build step required - TypeScript source is published'"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "commander": "^14.0.3",
+    "xlsx": "^0.18.5"
   },
   "peerDependencies": {
     "typescript": "^5"
