@@ -4,10 +4,13 @@ import * as path from 'path';
 export class SpecializationTools {
     private static categoryMap: Map<string, string> | null = null;
     private static groupMap: Map<string, number> | null = null;
+    private static specsByCategory: Map<string, string[]> | null = null;
+    private static categoriesByGroup: Map<number, string[]> | null = null;
 
     private static initMap() {
         if (this.categoryMap) return;
         this.categoryMap = new Map();
+        this.specsByCategory = new Map();
 
         try {
             // Find specializations.csv relative to this file
@@ -21,7 +24,14 @@ export class SpecializationTools {
                         const spec = parts[0].trim().replace(/^"|"$/g, '');
                         const cat = parts[1].trim().replace(/^"|"$/g, '');
                         if (spec) {
-                            this.categoryMap!.set(spec.toLowerCase(), cat);
+                            const specLower = spec.toLowerCase();
+                            const catLower = cat.toLowerCase();
+                            this.categoryMap!.set(specLower, cat);
+                            
+                            if (!this.specsByCategory!.has(catLower)) {
+                                this.specsByCategory!.set(catLower, []);
+                            }
+                            this.specsByCategory!.get(catLower)!.push(spec);
                         }
                     }
                 }
@@ -36,6 +46,7 @@ export class SpecializationTools {
     private static initGroupMap() {
         if (this.groupMap) return;
         this.groupMap = new Map();
+        this.categoriesByGroup = new Map();
 
         try {
             const csvPath = path.join(__dirname, '../../data/categories.csv');
@@ -48,7 +59,13 @@ export class SpecializationTools {
                         const categoryName = parts[0].trim().replace(/^"|"$/g, '');
                         const groupId = parseInt(parts[1].trim().replace(/^"|"$/g, ''), 10);
                         if (categoryName && !isNaN(groupId)) {
-                            this.groupMap!.set(categoryName.toLowerCase(), groupId);
+                            const catLower = categoryName.toLowerCase();
+                            this.groupMap!.set(catLower, groupId);
+
+                            if (!this.categoriesByGroup!.has(groupId)) {
+                                this.categoriesByGroup!.set(groupId, []);
+                            }
+                            this.categoriesByGroup!.get(groupId)!.push(categoryName);
                         }
                     }
                 }
@@ -85,5 +102,33 @@ export class SpecializationTools {
             if (group1 && group2 && group1 === group2) return true;
         }
         return false;
+    }
+
+    static getSameCategorySpecializations(specName: string, useGroup?: boolean): string[] {
+        if (!specName) return [];
+        this.initMap();
+        
+        const category = this.getCategory(specName);
+        if (!category) return [];
+
+        if (!useGroup) {
+            return this.specsByCategory?.get(category.toLowerCase()) || [];
+        }
+
+        this.initGroupMap();
+        const groupId = this.getGroupId(specName);
+        if (!groupId) {
+            // If no group found, fall back to same category
+            return this.specsByCategory?.get(category.toLowerCase()) || [];
+        }
+
+        const categories = this.categoriesByGroup?.get(groupId) || [];
+        const result: string[] = [];
+        for (const cat of categories) {
+            const specs = this.specsByCategory?.get(cat.toLowerCase()) || [];
+            result.push(...specs);
+        }
+        
+        return result;
     }
 }

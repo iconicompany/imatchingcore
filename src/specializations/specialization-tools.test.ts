@@ -85,4 +85,40 @@ describe("SpecializationTools", () => {
             expect(SpecializationTools.isSameCategory("Java разработчик", "Unknown", true)).toBe(false);
         });
     });
+
+    describe("getSameCategorySpecializations", () => {
+        test("should return all specializations in the same category", () => {
+            const javaSpecs = SpecializationTools.getSameCategorySpecializations("Java разработчик");
+            expect(javaSpecs).toContain("Java разработчик");
+            expect(javaSpecs).toContain("Python разработчик");
+            expect(javaSpecs).toContain("Golang разработчик");
+            // Should not contain specs from other categories
+            expect(javaSpecs).not.toContain("React разработчик");
+        });
+
+        test("should return all specializations in the same group when useGroup=true", () => {
+            // Frontend and Web development are in the same group (5)
+            const frontendSpecs = SpecializationTools.getSameCategorySpecializations("Frontend разработчик", true);
+            expect(frontendSpecs).toContain("Frontend разработчик");
+            expect(frontendSpecs).toContain("Web разработчик");
+            expect(frontendSpecs).toContain("React разработчик");
+            expect(frontendSpecs).toContain("Vue.js разработчик");
+            
+            // QA ручной (Ручное тестирование) and QA авто (Автоматизированное тестирование) and Тестировщик 1С (Тестирование) are in group 13
+            const qaSpecs = SpecializationTools.getSameCategorySpecializations("QA ручной", true);
+            expect(qaSpecs).toContain("QA ручной");
+            expect(qaSpecs).toContain("QA авто");
+            expect(qaSpecs).toContain("Тестировщик 1С");
+        });
+
+        test("should return empty array for unknown specialization", () => {
+            expect(SpecializationTools.getSameCategorySpecializations("Unknown")).toEqual([]);
+            expect(SpecializationTools.getSameCategorySpecializations("")).toEqual([]);
+        });
+
+        test("should be case-insensitive", () => {
+            const javaSpecs = SpecializationTools.getSameCategorySpecializations("JAVA РАЗРАБОТЧИК");
+            expect(javaSpecs).toContain("Java разработчик");
+        });
+    });
 });
