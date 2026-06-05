@@ -185,6 +185,10 @@ export class SpecializationsMatchingFactory {
             { src: 'fe', dst: 'frontend' },
             { src: 'do', dst: 'devops' },
             { src: 'qa', dst: 'тестировщик' },
+            { src: 'aqa', dst: 'тестировщик авто' },
+            { src: 'sdet', dst: 'тестировщик авто' },
+            { src: 'нт', dst: 'нагрузочный' },
+            { src: 'сетевой', dst: 'сетевой' },
             { src: 'developer', dst: 'разработчик' },
             { src: 'engineer', dst: 'инженер' },
             { src: 'analyst', dst: 'аналитик' },
@@ -241,7 +245,9 @@ export class SpecializationsMatchingFactory {
             { word: 'руководитель', weight: 0.8 },
             { word: 'аналитик', weight: 0.3 },
             { word: 'дизайнер', weight: 0.3 },
-            { word: 'тестировщик', weight: 0.3 },
+            // NOTE: тестировщик weight must be >= qa weight (2.0) because
+            // 'qa' synonym maps to 'тестировщик', so weight lookup uses normalized form
+            { word: 'тестировщик', weight: 2.0 },
             { word: 'архитектор', weight: 0.3 },
             { word: 'консультант', weight: 0.2 },
             { word: 'администратор', weight: 0.3 },
@@ -251,6 +257,13 @@ export class SpecializationsMatchingFactory {
             { word: 'scrum', weight: 2.5 },
             { word: 'jira', weight: 1.5 },
             { word: 'etl', weight: 1.5 },
+            { word: 'фуллстек', weight: 1.5 },
+            { word: 'сетевой', weight: 2.0 },
+            { word: 'мобильный', weight: 1.5 },
+            { word: 'нагрузочный', weight: 1.5 },
+            // ручной weight is intentionally low: QA ручной is the default fallback
+            // when no more specific QA subtype (авто/нагрузочный/мобильный) is mentioned
+            { word: 'ручной', weight: 0.1 },
         ];
 
         const stopWords = [
