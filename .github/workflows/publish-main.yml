@@ -18,7 +18,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # npm@latest не ставится на Node 20 начиная с npm 12 ("Required: ^22.22.2 ||
+          # ^24.15.0 || >=26.0.0") — шаг падал, и публикации не происходило вовсе.
+          node-version: 24
           registry-url: https://registry.npmjs.org/
       # Ensure npm 11.5.1 or later is installed 
       - run: npm install -g npm@latest

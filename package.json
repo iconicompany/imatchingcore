@@ -13,7 +13,7 @@
   "types": "src/index.ts",
   "type": "module",
   "scripts": {
-    "test": "bun test specializations-matching-engine.test.ts",
+    "test": "bun test",
     "build": "echo 'No build step required - TypeScript source is published'"
   },
   "devDependencies": {
