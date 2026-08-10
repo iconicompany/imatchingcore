@@ -47,15 +47,31 @@ describe('TanderDictionaryService.mapPosition', () => {
   });
 
   test('возвращает undefined вместо догадки, когда однозначного соответствия нет', () => {
-    // Без описания требований «Mobile Senior» — это и iOS, и Android, и Flutter.
-    expect(service.mapPosition('Mobile Senior')).toBeUndefined();
     // Корпоративный архитектор (TOGAF, ArchiMate) — не архитектор решений.
     expect(service.mapPosition('Корпоративный архитектор')).toBeUndefined();
-    // «Услуги тестирования» без требований не отличить: ручное или автоматизация.
-    expect(service.mapPosition('Услуги разработки, QA   уровень средний (Удаленно)')).toBeUndefined();
+    // Администрирование SAP HANA — это SAP Basis, отдельной специализации у нас нет.
+    expect(service.mapPosition('Администрированике продуктов SAP HANA (уровень эксперт)')).toBeUndefined();
+    // Разработка на Hana Script и CDS — не ABAP, подставлять «Разработчик SAP ABAP» нельзя.
+    expect(service.mapPosition('Услуги разработки, технология SAP HANA (уровень эксперт)')).toBeUndefined();
     expect(service.mapPosition('')).toBeUndefined();
     expect(service.mapPosition(null)).toBeUndefined();
     expect(service.mapPosition('позиции с таким названием не существует')).toBeUndefined();
+  });
+
+  // Название позиции в шаблоне подачи короче, чем в ТЗ: там, где шаблон пишет «См. в
+  // спецификации подробные требования», настоящий текст лежит в «Требования к компетенциям
+  // (ТЗ).xlsx». Разметка сделана по нему — иначе десять позиций остались бы без цены зря.
+  test('роль взята из полного текста требований в ТЗ, а не из отсылки в шаблоне', () => {
+    // «Mobile Senior»: в ТЗ — «Глубокое знание Android, отличий версий 4/5/6/7/8/9».
+    expect(service.mapPosition('Mobile Senior')).toBe('Android разработчик');
+    // «Архитектор MS OLAP»: многомерные кубы SSAS, MDX и XMLA.
+    expect(service.mapPosition('Архитектор MS OLAP (удаленно)')).toBe('Разработчик BI');
+    // Тестирование веба и мобильных, тест-дизайн, чек-листы — ручное.
+    expect(service.mapPosition('Услуги разработки, QA   уровень средний (Удаленно)')).toBe('QA ручной');
+    // А тимлид тестирования — уже управление командой.
+    expect(service.mapPosition('Услуги разработки, TeamLead QA платформы Rubbles Planning Force')).toBe(
+      'Тест-менеджер',
+    );
   });
 
   test('никогда не отображает на специализацию, которой нет в нашем справочнике', () => {
