@@ -84,6 +84,11 @@ describe("SpecializationsMatchingEngine Benchmark", () => {
         { input: "Консультант AirWatch 2 линия [10876]", expected: "" },
         { input: "Системный аналитик RedLab AN-10867", expected: "Системный аналитик" },
         { input: "DevOps_Middle+/Senior RedLab [DO 10873]", expected: "DevOps" },
+        // Справочник знает «Golang разработчик», вакансии пишут «Go разработчик». До синонима
+        // go → golang движок возвращал на такой текст null, и специализация терялась целиком.
+        { input: "Go разработчик", expected: "Golang разработчик" },
+        { input: "Позиция: Go разработчик Senior", expected: "Golang разработчик" },
+        { input: "Golang разработчик", expected: "Golang разработчик" },
     ];
 
     // -------------------------------------------------------------------------

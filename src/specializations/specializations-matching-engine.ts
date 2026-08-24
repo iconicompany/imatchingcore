@@ -22,7 +22,17 @@ export class SpecializationsMatchingEngine {
     ) {
         this.synonyms = new Map();
         for (const s of synonyms) {
-            this.synonyms.set(this.replaceHomoglyphs(s.src.toLowerCase()), s.dst ? s.dst.toLowerCase() : null);
+            // Гомоглифы применяются и к ЗАМЕНЕ, а не только к искомому слову. Специализации
+            // проходят через `replaceHomoglyphs` при предварительной нормализации, то есть
+            // «Golang» хранится как «gоlаng» с КИРИЛЛИЧЕСКИМИ о и а. Синоним, чей `dst` записан
+            // латиницей, давал слово, которое не совпадало ни с одной специализацией — отказ
+            // молчаливый: движок возвращал null, как будто подходящей специализации нет вовсе.
+            // Это касалось всех замен латиницей: `be` → `backend`, `fe` → `frontend`,
+            // `do` → `devops`, `go` → `golang`.
+            this.synonyms.set(
+                this.replaceHomoglyphs(s.src.toLowerCase()),
+                s.dst ? this.replaceHomoglyphs(s.dst.toLowerCase()) : null
+            );
         }
 
         // 1. Initialize weights
